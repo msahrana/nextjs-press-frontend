@@ -1,11 +1,24 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { getBlogs } from '../service/getBlogs';
+import MyServerComponent from '../ui/MyServerComponent';
+
 const BlogsPage = async () => {
-    const posts = await fetch('https://jsonplaceholder.typicode.com/posts');
+    const blogs = await getBlogs();
 
-    const blogData = await posts.json()
+    console.log(blogs);
 
-    console.log(blogData);
-
-    return <div>Blog Page</div>;
+    return (
+        <div>
+            Blog Page:
+            {blogs.map((blog: any) => (
+                <div key={blog.id}>
+                    <h2>{blog.title}</h2>
+                    <p>{blog.body}</p>
+                </div>
+            ))}
+            <MyServerComponent />
+        </div>
+    );
 };
 
 export default BlogsPage;

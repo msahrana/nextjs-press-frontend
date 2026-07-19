@@ -1,40 +1,41 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { logout } from '@/service/logout';
 import {
     CircleUserRound,
     LayoutDashboard,
     LogOut,
-    Menu,
     Settings,
     User,
 } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import { Button } from '../ui/button';
 
-import { cn } from '@/lib/utils';
-import { buttonVariants } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-
-const navLinks = [
+// Navigation items configuration
+const navItems = [
     { label: 'Home', href: '/' },
-    { label: 'Features', href: '/features' },
+    { label: 'Services', href: '/services' },
     { label: 'Pricing', href: '/pricing' },
+    { label: 'Features', href: '/features' },
     { label: 'About', href: '/about' },
     { label: 'Contact', href: '/contact' },
 ];
 
+// User menu items configuration
 const userMenuItems = [
-    { label: 'Profile', href: '/profile', icon: User },
-    { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-    { label: 'Settings', href: '/settings', icon: Settings },
+    { label: 'Profile', icon: User, href: '/profile' },
+    { label: 'Dashboard', icon: LayoutDashboard, href: '/dashboard' },
+    { label: 'Settings', icon: Settings, href: '/settings' },
 ];
 
 type IUser = {
@@ -66,167 +67,95 @@ type NavbarProps = {
 };
 
 export function Navbar({ user }: NavbarProps) {
-    const pathname = usePathname();
     const router = useRouter();
 
-    const getInitials = (name: string) => {
-        if (!name) return '';
-
-        const words = name.trim().split(/\s+/);
-        // Single name: first + last character (Tara -> TR)
-        if (words.length === 1) {
-            const word = words[0];
-            return (word[0] + (word[word.length - 1] || '')).toUpperCase();
-        }
-        // Multiple names: first letter of first and last word
-        return (words[0][0] + words[words.length - 1][0]).toUpperCase();
-    };
-
-    const handleLogout = async () => {
-        try {
-            await fetch('/api/auth/logout', {
-                method: 'POST',
-            });
+    const handleUserMenuAction = async (action: string) => {
+        if (action === 'logout') {
+            await logout();
+            toast.success('User Logged Out Successfully!');
             router.push('/login');
-            router.refresh();
-        } catch (error) {
-            console.error(error);
         }
     };
 
     return (
-        <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4">
-                {/* Logo */}
-                <Link href="/" className="flex items-center gap-2">
-                    <CircleUserRound className="size-6 text-primary" />
-                    <span className="text-2xl font-bold text-primary tracking-tight">
-                        Nextjs Press.
-                    </span>
-                </Link>
+        <nav className="border-b border-border">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex items-center justify-between h-16">
+                    {/* Logo */}
+                    <Link href="/" className="flex items-center gap-5 shrink-0">
+                        <CircleUserRound className="size-6 text-primary" />
+                        <span className="text-2xl font-bold text-primary ">
+                            NextJs Press
+                        </span>
+                    </Link>
 
-                {/* Desktop nav links */}
-                <ul className="hidden items-center gap-1 md:flex">
-                    {navLinks.map((link) => {
-                        const isActive = pathname === link.href;
-                        return (
-                            <li key={link.href}>
-                                <Link
-                                    href={link.href}
-                                    className={cn(
-                                        'rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground',
-                                        isActive && 'text-foreground',
-                                    )}
-                                >
-                                    {link.label}
-                                </Link>
-                            </li>
-                        );
-                    })}
-                </ul>
+                    {/* Nav Links */}
+                    <div className="hidden md:absolute md:left-1/2 md:transform md:-translate-x-1/2 md:flex md:items-center md:gap-8">
+                        {navItems.map((item) => (
+                            <Link
+                                key={item.href}
+                                href={item.href}
+                                className="text-foreground hover:text-primary transition-colors text-sm font-medium"
+                            >
+                                {item.label}
+                            </Link>
+                        ))}
+                    </div>
 
-                {/* Right side: mobile menu + user dropdown */}
-                <div className="flex items-center gap-2">
-                    {/* Mobile nav dropdown */}
-                    <DropdownMenu>
-                        <DropdownMenuTrigger
-                            className={cn(
-                                buttonVariants({
-                                    variant: 'ghost',
-                                    size: 'icon',
-                                }),
-                                'md:hidden',
-                            )}
-                        >
-                            <Menu />
-                            <span className="sr-only">
-                                Toggle navigation menu
-                            </span>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-48">
-                            <DropdownMenuGroup>
-                                {navLinks.map((link) => (
-                                    <DropdownMenuItem
-                                        key={link.href}
-                                        onClick={() => router.push(link.href)}
-                                    >
-                                        {link.label}
-                                    </DropdownMenuItem>
-                                ))}
-                            </DropdownMenuGroup>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-
-                    {/* User dropdown */}
-                    <DropdownMenu>
-                        <DropdownMenuTrigger
-                            className={cn(
-                                buttonVariants({
-                                    variant: 'ghost',
-                                    size: 'icon',
-                                }),
-                                'rounded-full',
-                            )}
-                        >
-                            <Avatar className="size-8">
-                                <AvatarImage
-                                    src={
-                                        user.data?.profile.profile
-                                            ?.profilePhoto ||
-                                        '/diverse-user-avatars.png'
-                                    }
-                                    alt={
-                                        user.data?.profile.name || 'User avatar'
-                                    }
-                                />
-                                <AvatarFallback>
-                                    {getInitials(user.data?.profile.name || '')}
-                                </AvatarFallback>
-                            </Avatar>
-                            <span className="sr-only">Open user menu</span>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-56">
-                            <div className="flex flex-col gap-0.5 px-1.5 py-1.5">
-                                <span className="text-sm font-medium">
-                                    {user.data?.profile.name}
-                                </span>
-                                <span className="text-xs text-muted-foreground">
-                                    {user.data?.profile.email}
-                                </span>
-                            </div>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuGroup>
-                                {userMenuItems.map((item) => (
-                                    <DropdownMenuItem
-                                        key={item.href}
-                                        onClick={() => router.push(item.href)}
-                                    >
-                                        <item.icon />
-                                        {item.label}
-                                    </DropdownMenuItem>
-                                ))}
-                            </DropdownMenuGroup>
-                            <DropdownMenuSeparator />
-                            {user?.data?.profile ? (
+                    {/* User Dropdown */}
+                    {user.success ? (
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <div className="cursor-pointer">
+                                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                                        <User className="w-4 h-4 text-primary" />
+                                    </div>
+                                </div>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-56">
+                                <DropdownMenuLabel className="font-normal">
+                                    <div className="flex flex-col gap-1">
+                                        <p className="text-sm font-medium">
+                                            {user.data?.profile.name}
+                                        </p>
+                                        <p className="text-xs text-muted-foreground">
+                                            {user.data?.profile.email}
+                                        </p>
+                                    </div>
+                                </DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                {userMenuItems.map((item) => {
+                                    const Icon = item.icon;
+                                    return (
+                                        <DropdownMenuItem
+                                            key={item.href}
+                                            onClick={() =>
+                                                router.push(item.href)
+                                            }
+                                        >
+                                            <Icon className="w-4 h-4 mr-2" />
+                                            <span>{item.label}</span>
+                                        </DropdownMenuItem>
+                                    );
+                                })}
+                                <DropdownMenuSeparator />
                                 <DropdownMenuItem
-                                    variant="destructive"
-                                    onClick={handleLogout}
+                                    onClick={async () => {
+                                        await handleUserMenuAction('logout');
+                                    }}
                                 >
-                                    <LogOut className="mr-2 h-4 w-4" />
-                                    Sign out
+                                    <LogOut className="w-4 h-4 mr-2" />
+                                    <span>Log out</span>
                                 </DropdownMenuItem>
-                            ) : (
-                                <DropdownMenuItem
-                                    onClick={() => router.push('/login')}
-                                >
-                                    <User className="mr-2 h-4 w-4" />
-                                    Sign in
-                                </DropdownMenuItem>
-                            )}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    ) : (
+                        <Link href={'/login'}>
+                            <Button className="cursor-pointer">Login</Button>
+                        </Link>
+                    )}
                 </div>
-            </nav>
-        </header>
+            </div>
+        </nav>
     );
 }

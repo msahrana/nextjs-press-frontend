@@ -1,4 +1,4 @@
-import LoginForm from "../_components/LoginForm";
+import LoginForm from '../_components/LoginForm';
 
 export default function LoginPage() {
     return (
@@ -12,8 +12,9 @@ export default function LoginPage() {
                             Enter your credentials to access your account
                         </p>
                     </div>
+
                     {/* FORM */}
-                    <LoginForm/>
+                    <LoginForm />
                 </div>
             </div>
         </>

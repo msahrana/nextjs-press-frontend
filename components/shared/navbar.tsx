@@ -29,6 +29,8 @@ const navItems = [
     { label: 'Features', href: '/features' },
     { label: 'About', href: '/about' },
     { label: 'Contact', href: '/contact' },
+    { label: 'News', href: '/news' },
+    { label: 'Premium', href: '/premium' },
 ];
 
 // User menu items configuration
@@ -144,8 +146,8 @@ export function Navbar({ user }: NavbarProps) {
                                         await handleUserMenuAction('logout');
                                     }}
                                 >
-                                    <LogOut className="w-4 h-4 mr-2" />
-                                    <span>Log out</span>
+                                    <LogOut className="w-4 h-4 mr-2 text-red-500 font-bold" />
+                                    <span className='text-red-500 font-bold'>Log out</span>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>

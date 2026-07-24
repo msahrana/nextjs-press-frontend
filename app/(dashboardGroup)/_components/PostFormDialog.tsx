@@ -41,7 +41,7 @@ export function PostFormDialog({ mode, post }: PostFormDialogProps) {
                         ? 'Post updated successfully'
                         : 'Post created successfully'),
             );
-            // eslint-disable-next-line react-hooks/set-state-in-effect -- closing the dialog is the intended reaction to the server action's result, not a render loop
+            //eslint-disable-next-line react-hooks/set-state-in-effect -- closing the dialog is the intended reaction to the server action's result, not a render loop
             setOpen(false);
         } else {
             toast.error(state.message || 'Something went wrong');

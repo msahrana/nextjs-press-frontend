@@ -20,6 +20,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
+import { NavbarProps } from '@/lib/types';
 
 // Navigation items configuration
 const navItems = [
@@ -35,43 +36,27 @@ const navItems = [
 
 // User menu items configuration
 const userMenuItems = [
-    { label: 'Profile', icon: User, href: '/profile' },
-    { label: 'Dashboard', icon: LayoutDashboard, href: '/dashboard' },
-    { label: 'Settings', icon: Settings, href: '/settings' },
+    { label: 'Profile', icon: User, action: 'profile' },
+    { label: 'Dashboard', icon: LayoutDashboard, action: 'dashboard' },
+    { label: 'Settings', icon: Settings, action: 'settings' },
 ];
-
-type IUser = {
-    success: boolean;
-    message: string;
-    data: {
-        profile: {
-            id: string;
-            name: string;
-            email: string;
-            activeStatus: string;
-            role: string;
-            createdAt: string;
-            updatedAt: string;
-            profile: {
-                id: string;
-                profilePhoto: string;
-                bio: string | null;
-                userId: string;
-                createdAt: string;
-                updatedAt: string;
-            };
-        };
-    };
-};
-
-type NavbarProps = {
-    user: IUser;
-};
 
 export function Navbar({ user }: NavbarProps) {
     const router = useRouter();
 
     const handleUserMenuAction = async (action: string) => {
+        if (action === 'dashboard') {
+            if (user.data.profile.role === 'USER') {
+                router.push('/dashboard');
+            } else if (user.data.profile.role === 'AUTHOR') {
+                router.push('/author-dashboard');
+            } else if (user.data.profile.role === 'ADMIN') {
+                router.push('/admin-dashboard');
+            }
+
+            return;
+        }
+
         if (action === 'logout') {
             await logout();
             toast.success('User Logged Out Successfully!');
@@ -130,9 +115,11 @@ export function Navbar({ user }: NavbarProps) {
                                     const Icon = item.icon;
                                     return (
                                         <DropdownMenuItem
-                                            key={item.href}
+                                            key={item.action}
                                             onClick={() =>
-                                                router.push(item.href)
+                                                handleUserMenuAction(
+                                                    item.action,
+                                                )
                                             }
                                         >
                                             <Icon className="w-4 h-4 mr-2" />
@@ -147,7 +134,9 @@ export function Navbar({ user }: NavbarProps) {
                                     }}
                                 >
                                     <LogOut className="w-4 h-4 mr-2 text-red-500 font-bold" />
-                                    <span className='text-red-500 font-bold'>Log out</span>
+                                    <span className="text-red-500 font-bold">
+                                        Log out
+                                    </span>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>

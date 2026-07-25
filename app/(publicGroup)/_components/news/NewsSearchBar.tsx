@@ -19,6 +19,24 @@ export function NewsSearchBar() {
 
     const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
+    // const updateQuery = (key: string, value: string) => {
+    //     const params = new URLSearchParams(searchParams.toString());
+
+    //     if (!value || value === 'all') {
+    //         params.delete(key);
+    //     } else {
+    //         if (key === 'tags') {
+    //             params.set(key, JSON.stringify([value]));
+    //         } else {
+    //             params.set(key, value);
+    //         }
+    //     }
+
+    //     params.delete('page');
+
+    //     router.replace(`${pathname}?${params.toString()}`);
+    // };
+
     const updateQuery = (key: string, value: string) => {
         const params = new URLSearchParams(searchParams.toString());
 
@@ -28,7 +46,6 @@ export function NewsSearchBar() {
             params.set(key, value);
         }
 
-        // Reset page when filter changes
         params.delete('page');
 
         router.replace(`${pathname}?${params.toString()}`);
@@ -58,17 +75,17 @@ export function NewsSearchBar() {
                 />
             </div>
 
-            {/* Category */}
+            {/* Tags */}
             <Select
-                defaultValue={searchParams.get('category') ?? 'all'}
-                onValueChange={(value) => updateQuery('category', value)}
+                defaultValue={searchParams.get('tags') ?? 'all'}
+                onValueChange={(value) => updateQuery('tags', value)}
             >
                 <SelectTrigger className="w-full lg:w-45">
-                    <SelectValue placeholder="Category" />
+                    <SelectValue placeholder="Tags" />
                 </SelectTrigger>
 
                 <SelectContent>
-                    <SelectItem value="all">All Categories</SelectItem>
+                    <SelectItem value="all">All Tags</SelectItem>
                     <SelectItem value="Technology">Technology</SelectItem>
                     <SelectItem value="Business">Business</SelectItem>
                     <SelectItem value="Sports">Sports</SelectItem>
@@ -79,18 +96,16 @@ export function NewsSearchBar() {
 
             {/* Sort */}
             <Select
-                defaultValue={searchParams.get('sortBy') ?? 'latest'}
-                onValueChange={(value) => updateQuery('sortBy', value)}
+                defaultValue={searchParams.get('sortOrder') ?? 'desc'}
+                onValueChange={(value) => updateQuery('sortOrder', value)}
             >
                 <SelectTrigger className="w-full lg:w-45">
-                    <SelectValue placeholder="Sort By" />
+                    <SelectValue placeholder="Sort" />
                 </SelectTrigger>
 
                 <SelectContent>
-                    <SelectItem value="latest">Latest</SelectItem>
-                    <SelectItem value="oldest">Oldest</SelectItem>
-                    <SelectItem value="views">Most Viewed</SelectItem>
-                    <SelectItem value="title">Title A-Z</SelectItem>
+                    <SelectItem value="desc">Newest First</SelectItem>
+                    <SelectItem value="asc">Oldest First</SelectItem>
                 </SelectContent>
             </Select>
         </div>

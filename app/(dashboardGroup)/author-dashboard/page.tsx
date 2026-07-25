@@ -9,7 +9,7 @@ const AuthorDashboardPage = async () => {
             <DashboardHeader
                 title={
                     <>
-                        Welcome to <span className="text-red-500">Author</span>
+                        Welcome to <span className="text-red-500">Author </span>
                         Dashboard
                     </>
                 }

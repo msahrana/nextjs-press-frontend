@@ -9,7 +9,7 @@ const UserDashboardPage = () => {
             <DashboardHeader
                 title={
                     <>
-                        Welcome to <span className="text-red-500">User</span>
+                        Welcome to <span className="text-red-500">User </span>
                         Dashboard
                     </>
                 }

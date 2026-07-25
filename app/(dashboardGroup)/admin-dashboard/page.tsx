@@ -109,7 +109,7 @@ const AdminDashboard = () => {
             <DashboardHeader
                 title={
                     <>
-                        Welcome to <span className="text-red-500">Admin</span>
+                        Welcome to <span className="text-red-500">Admin </span>
                         Dashboard
                     </>
                 }

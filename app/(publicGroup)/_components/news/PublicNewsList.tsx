@@ -1,27 +1,27 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NewsCard } from '@/app/(publicGroup)/_components/news/NewsCard';
 import { IPost } from '@/lib/types';
+import { getAllNews } from '../../_actions/getAllNews';
+import { NewsPagination } from './NewsPagination';
+// import { getPosts } from '../../_actions/getPosts';
 
-export async function PublicNewsList() {
-    const result = {
-        success: true,
-        data: [
-            {
-                id: '1',
-                title: 'Public News 1',
-                content: 'This is the content of public news 1.',
-                thumbnail: 'https://via.placeholder.com/150',
-                isFeatured: true,
-                status: 'PUBLISHED',
-                tags: ['tag1', 'tag2'],
-                views: 100,
-                isPremium: false,
-                authorId: '1',
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
-            },
-        ],
-    };
+export async function PublicNewsList({
+    searchParams,
+}: {
+    searchParams?: Promise<{
+        [key: string]: string | string[] | undefined;
+    }>;
+}) {
+    const query = await searchParams;
+
+    const result = await getAllNews({
+        endpoint: '/api/posts',
+        query: {
+            ...query,
+            limit: '3',
+        },
+        withAuth: true,
+        tags: ['posts'],
+    });
 
     if (!result.success || !result.data?.length) {
         return (
@@ -34,10 +34,15 @@ export async function PublicNewsList() {
     return (
         <div className="space-y-8">
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {result.data.map((post: IPost | any) => (
+                {result.data.map((post: IPost) => (
                     <NewsCard key={post.id} post={post} />
                 ))}
             </div>
+
+            <NewsPagination
+                currentPage={result.meta.page}
+                totalPages={result.meta.totalPages}
+            />
         </div>
     );
 }

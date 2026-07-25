@@ -8,16 +8,20 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { SearchIcon } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useRef } from 'react';
 
-export function NewsSearchBar() {
-    const pathname = usePathname();
-    const searchParams = useSearchParams();
-    const router = useRouter();
+interface NewsToolbarProps {
+    categories: string[];
+}
 
-    const debounceRef = useRef<NodeJS.Timeout | null>(null);
+export function NewsToolbar({ categories }: NewsToolbarProps) {
+    const pathname = usePathname();
+    const router = useRouter();
+    const searchParams = useSearchParams();
+
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const updateQuery = (key: string, value: string) => {
         const params = new URLSearchParams(searchParams.toString());
@@ -28,27 +32,23 @@ export function NewsSearchBar() {
             params.set(key, value);
         }
 
-        // Reset page when filter changes
         params.delete('page');
 
         router.replace(`${pathname}?${params.toString()}`);
     };
 
     const handleSearch = (value: string) => {
-        if (debounceRef.current) {
-            clearTimeout(debounceRef.current);
-        }
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
-        debounceRef.current = setTimeout(() => {
+        timeoutRef.current = setTimeout(() => {
             updateQuery('searchTerm', value);
         }, 500);
     };
 
     return (
-        <div className="flex w-full flex-col gap-4 lg:flex-row lg:items-center lg:justify-end">
-            {/* Search */}
-            <div className="relative w-full lg:max-w-sm">
-                <SearchIcon className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+        <div className="flex flex-col gap-4 md:flex-row md:items-center">
+            <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 
                 <Input
                     className="pl-9"
@@ -58,38 +58,40 @@ export function NewsSearchBar() {
                 />
             </div>
 
-            {/* Category */}
             <Select
                 defaultValue={searchParams.get('category') ?? 'all'}
                 onValueChange={(value) => updateQuery('category', value)}
             >
-                <SelectTrigger className="w-full lg:w-45">
+                <SelectTrigger className="w-45">
                     <SelectValue placeholder="Category" />
                 </SelectTrigger>
 
                 <SelectContent>
                     <SelectItem value="all">All Categories</SelectItem>
-                    <SelectItem value="Technology">Technology</SelectItem>
-                    <SelectItem value="Business">Business</SelectItem>
-                    <SelectItem value="Sports">Sports</SelectItem>
-                    <SelectItem value="Health">Health</SelectItem>
-                    <SelectItem value="Education">Education</SelectItem>
+
+                    {categories.map((category) => (
+                        <SelectItem key={category} value={category}>
+                            {category}
+                        </SelectItem>
+                    ))}
                 </SelectContent>
             </Select>
 
-            {/* Sort */}
             <Select
                 defaultValue={searchParams.get('sortBy') ?? 'latest'}
                 onValueChange={(value) => updateQuery('sortBy', value)}
             >
-                <SelectTrigger className="w-full lg:w-45">
-                    <SelectValue placeholder="Sort By" />
+                <SelectTrigger className="w-45">
+                    <SelectValue />
                 </SelectTrigger>
 
                 <SelectContent>
                     <SelectItem value="latest">Latest</SelectItem>
+
                     <SelectItem value="oldest">Oldest</SelectItem>
+
                     <SelectItem value="views">Most Viewed</SelectItem>
+
                     <SelectItem value="title">Title A-Z</SelectItem>
                 </SelectContent>
             </Select>

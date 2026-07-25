@@ -135,12 +135,10 @@ const ProfileForm = ({ profile }: ProfileFormProps) => {
                             width={200}
                             height={200}
                             alt="Profile Photo"
+                            loading="eager"
+                            priority
                             unoptimized
-                            className="
-                                rounded-full
-                                border
-                                object-cover
-                            "
+                            className="rounded-full border object-cover"
                         />
 
                         <h2

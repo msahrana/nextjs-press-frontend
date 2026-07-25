@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
             {
                 hostname: 'example.com',
             },
+            {
+                protocol: "https",
+                hostname: "picsum.photos",
+            },
         ],
     },
 };

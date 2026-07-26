@@ -1,4 +1,4 @@
-import ProfileForm from './_components/profile-form';
+import ProfileForm from '../../dashboard/profile/_components/profile-form';
 import { cookies } from 'next/headers';
 
 const getMyProfile = async () => {

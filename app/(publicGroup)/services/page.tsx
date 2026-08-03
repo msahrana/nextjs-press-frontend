@@ -1,102 +1,227 @@
 import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-    CardDescription,
-} from '@/components/ui/card';
-import {
-    FileText,
+    PenSquare,
     ShieldCheck,
-    BarChart3,
-    Settings2,
-    Search,
+    Users,
     MessageSquare,
+    BarChart3,
+    Database,
+    Search,
+    Code2,
+    CheckCircle2,
+    ArrowRight,
 } from 'lucide-react';
 
-// Define the services data based on Prisma Press backend features
 const services = [
     {
-        title: 'Content Management',
+        icon: PenSquare,
+        title: 'Content Publishing',
         description:
-            'Effortlessly create, edit, and manage blog posts with a robust Prisma-powered backend and intuitive API endpoints.',
-        icon: FileText,
+            'Create, edit, publish, archive, and manage blog posts with a clean and efficient workflow.',
     },
     {
-        title: 'Secure Authentication',
-        description:
-            "Built-in JWT and bcrypt security protocols ensure your users' data, profiles, and passwords are always protected.",
         icon: ShieldCheck,
-    },
-    {
-        title: 'Admin Analytics',
+        title: 'Authentication & Security',
         description:
-            'Track post views, user growth, and comment metrics with a dedicated admin dashboard and reporting endpoints.',
-        icon: BarChart3,
+            'Secure authentication using JWT, Refresh Tokens, encrypted passwords, and role-based authorization.',
     },
     {
-        title: 'Modular Architecture',
+        icon: Users,
+        title: 'User Management',
         description:
-            'Built with Express and TypeScript, ensuring your backend remains scalable, maintainable, and lightning fast.',
-        icon: Settings2,
+            'Manage users, profiles, roles, and account status with complete administrative control.',
     },
     {
-        title: 'Advanced Search',
-        description:
-            'Find content instantly with powerful query parameters for tags, authors, status, and featured posts.',
-        icon: Search,
-    },
-    {
+        icon: MessageSquare,
         title: 'Comment Moderation',
         description:
-            'Keep your community safe with built-in tools allowing admins to approve, reject, or delete user comments.',
-        icon: MessageSquare,
+            'Allow readers to engage with articles while giving administrators moderation capabilities.',
+    },
+    {
+        icon: Search,
+        title: 'Search & Filtering',
+        description:
+            'Quickly discover posts using keywords, tags, authors, publication status, and featured filters.',
+    },
+    {
+        icon: BarChart3,
+        title: 'Analytics Dashboard',
+        description:
+            'Monitor posts, comments, users, and total views through a comprehensive reporting system.',
+    },
+    {
+        icon: Database,
+        title: 'Database Management',
+        description:
+            'Powered by PostgreSQL and Prisma ORM for reliable, scalable, and high-performance data management.',
+    },
+    {
+        icon: Code2,
+        title: 'REST API',
+        description:
+            'Well-structured REST APIs make frontend integration simple and developer-friendly.',
     },
 ];
 
-export default function Services() {
+const workflow = [
+    'User Registration & Authentication',
+    'Create and Publish Articles',
+    'Manage User Profiles',
+    'Engage Through Comments',
+    'Moderate Content',
+    'Track Platform Statistics',
+];
+
+const ServicesPage = () => {
     return (
-        <section id="services" className="w-full py-20 md:py-28 bg-background">
-            <div className="container mx-auto px-4 md:px-6">
-                {/* Section Header */}
-                <div className="flex flex-col items-center text-center mb-16">
-                    <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground mb-4">
-                        Our Services
-                    </h2>
-                    <p className="max-w-2xl text-lg text-muted-foreground">
-                        We provide top-notch services to help you scale your
-                        blog and manage your content effortlessly using Prisma
-                        Press.
+        <main className="min-h-screen bg-slate-50">
+            {/* Hero */}
+            <section className="bg-linear-to-r from-blue-700 via-indigo-700 to-purple-700 text-white">
+                <div className="container mx-auto px-6 py-24 text-center">
+                    <h1 className="text-5xl font-bold">Services We Provide</h1>
+
+                    <p className="mx-auto mt-6 max-w-3xl text-lg text-slate-200">
+                        Prisma Press delivers everything needed to build,
+                        manage, and scale a modern blogging platform—from
+                        authentication and publishing to analytics and content
+                        moderation.
+                    </p>
+                </div>
+            </section>
+
+            {/* Services */}
+            <section className="container mx-auto px-6 py-20">
+                <div className="mb-14 text-center">
+                    <h2 className="text-4xl font-bold">Core Services</h2>
+
+                    <p className="mt-4 text-slate-600 max-w-2xl mx-auto">
+                        Designed for developers, writers, and organizations who
+                        need a secure, fast, and scalable publishing platform.
                     </p>
                 </div>
 
-                {/* Services Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {services.map((service, index) => {
+                <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
+                    {services.map((service) => {
                         const Icon = service.icon;
+
                         return (
-                            <Card
-                                key={index}
-                                className="border border-border bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow duration-300 hover:border-primary/50"
+                            <div
+                                key={service.title}
+                                className="rounded-2xl border bg-white p-8 shadow-sm transition hover:-translate-y-2 hover:shadow-xl"
                             >
-                                <CardHeader>
-                                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                                        <Icon className="w-6 h-6 text-primary" />
-                                    </div>
-                                    <CardTitle className="text-xl font-semibold">
-                                        {service.title}
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <CardDescription className="text-base text-muted-foreground leading-relaxed">
-                                        {service.description}
-                                    </CardDescription>
-                                </CardContent>
-                            </Card>
+                                <div className="mb-6 inline-flex rounded-xl bg-blue-100 p-4">
+                                    <Icon className="h-8 w-8 text-blue-700" />
+                                </div>
+
+                                <h3 className="mb-3 text-xl font-semibold">
+                                    {service.title}
+                                </h3>
+
+                                <p className="leading-7 text-slate-600">
+                                    {service.description}
+                                </p>
+                            </div>
                         );
                     })}
                 </div>
-            </div>
-        </section>
+            </section>
+
+            {/* Workflow */}
+            <section className="bg-white py-20">
+                <div className="container mx-auto px-6">
+                    <div className="grid items-center gap-16 lg:grid-cols-2">
+                        <div>
+                            <h2 className="text-4xl font-bold">
+                                Simple Publishing Workflow
+                            </h2>
+
+                            <p className="mt-5 text-lg leading-8 text-slate-600">
+                                Prisma Press streamlines the entire content
+                                lifecycle—from user registration to publishing
+                                and community engagement.
+                            </p>
+
+                            <div className="mt-10 space-y-5">
+                                {workflow.map((step) => (
+                                    <div
+                                        key={step}
+                                        className="flex items-center gap-4"
+                                    >
+                                        <CheckCircle2 className="h-6 w-6 text-green-600" />
+
+                                        <span className="text-lg">{step}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="rounded-3xl bg-linear-to-br from-blue-600 to-indigo-700 p-10 text-white shadow-xl">
+                            <h3 className="text-3xl font-bold">
+                                Why Choose Prisma Press?
+                            </h3>
+
+                            <p className="mt-6 leading-8 text-blue-100">
+                                Built with modern technologies including
+                                Express.js, Prisma ORM, PostgreSQL, JWT,
+                                TypeScript, and Next.js to ensure reliability,
+                                security, and performance.
+                            </p>
+
+                            <div className="mt-10 space-y-5">
+                                <div className="flex items-center justify-between border-b border-white/20 pb-4">
+                                    <span>RESTful APIs</span>
+
+                                    <ArrowRight className="h-5 w-5" />
+                                </div>
+
+                                <div className="flex items-center justify-between border-b border-white/20 pb-4">
+                                    <span>Role-Based Authorization</span>
+
+                                    <ArrowRight className="h-5 w-5" />
+                                </div>
+
+                                <div className="flex items-center justify-between border-b border-white/20 pb-4">
+                                    <span>Secure Authentication</span>
+
+                                    <ArrowRight className="h-5 w-5" />
+                                </div>
+
+                                <div className="flex items-center justify-between border-b border-white/20 pb-4">
+                                    <span>Scalable Database</span>
+
+                                    <ArrowRight className="h-5 w-5" />
+                                </div>
+
+                                <div className="flex items-center justify-between">
+                                    <span>Modern Developer Experience</span>
+
+                                    <ArrowRight className="h-5 w-5" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* CTA */}
+            <section className="bg-slate-900 py-20 text-white">
+                <div className="container mx-auto px-6 text-center">
+                    <h2 className="text-4xl font-bold">
+                        Ready to Build Your Blog Platform?
+                    </h2>
+
+                    <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-300">
+                        Whether you`re creating a personal blog, company
+                        knowledge base, or large-scale publishing platform,
+                        Prisma Press provides the tools you need.
+                    </p>
+
+                    <button className="mt-10 rounded-xl bg-white px-8 py-4 font-semibold text-slate-900 transition hover:bg-slate-200">
+                        Get Started
+                    </button>
+                </div>
+            </section>
+        </main>
     );
-}
+};
+
+export default ServicesPage;
